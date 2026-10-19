@@ -104,6 +104,24 @@ class SimulationTest(unittest.TestCase):
         self.assertEqual(voice.MISSING, set(), "埋められていないプレースホルダがある")
 
 
+class WebApiTest(unittest.TestCase):
+    def test_every_endpoint_serializes(self):
+        import json
+        from galaxy.web import api
+        w = SimulationTest.world
+        payloads = [api.state(w), api.galaxy_map(w), api.prologue(w), api.chronicle(w, 0, 1),
+                    api.famous(w), api.famous(w, alive_only=False), api.search(w, "・"), api.wars_list(w)]
+        payloads += [api.person(w, pid) for pid in list(w.persons)[:50]]
+        payloads += [api.faction(w, fid) for fid in w.factions]
+        payloads += [api.planet(w, pl.id) for pl in w.planets[:20]]
+        payloads += [api.war(w, wid) for wid in list(w.wars)[:20]]
+        for body in payloads:
+            self.assertIsNotNone(body)
+            json.dumps(body, ensure_ascii=False)
+        self.assertIsNone(api.person(w, -1))
+        self.assertIsNone(api.planet(w, 10 ** 6))
+
+
 class DeterminismTest(unittest.TestCase):
     def test_same_seed_same_history(self):
         a = _run(seed=5, years=5, planets=40)

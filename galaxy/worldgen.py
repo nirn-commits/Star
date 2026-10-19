@@ -47,8 +47,6 @@ def generate(seed=1, n_planets=120, n_factions=None):
         if o.leader is None:
             _staff_top(world, "order" if o.kind in ("order", "void") else "underworld", o.id, o.seat)
     world.log.clear()
-    for p in world.persons.values():
-        p.bio = [(t, b) for t, b in p.bio if t >= 0] or p.bio
     return world
 
 
@@ -334,7 +332,7 @@ def _populate(world):
         careers.start_career(world, p, quiet=True)
         _warm_rank(world, p)
     for p in world.persons.values():
-        p.bio = [(0, f"{world.plname(p.birth_planet)}で生まれた。")]
+        p.bio = [(p.birth_t, f"{world.plname(p.birth_planet)}で生まれた。")]
         if p.job:
             p.bio.append((0, f"物語の始まりの時点で、{careers.describe_job(world, p)}であった。"))
         p.wealth = rng.uniform(5, 60) * (1 + (p.job.rank if p.job else 0))

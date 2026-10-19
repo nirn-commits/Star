@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>残光暦 銀河年代記</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='7' fill='%23f2c46d'/%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%237cc4ff' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">残光暦</div>
+    <div class="brand-sub" id="galaxy-name">銀河年代記</div>
+  </div>
+  <div class="clock">
+    <div class="date" id="date">—</div>
+    <div class="counts" id="counts"></div>
+  </div>
+  <div class="controls">
+    <button id="play" class="btn primary" title="自動で時を進める">▶ 再生</button>
+    <select id="speed" class="sel" title="再生速度">
+      <option value="800,1">ゆっくり</option>
+      <option value="250,1" selected>ふつう</option>
+      <option value="400,6">はやい</option>
+      <option value="400,12">とてもはやい</option>
+    </select>
+    <span class="sep"></span>
+    <button class="btn" data-step="1">+1か月</button>
+    <button class="btn" data-step="12">+1年</button>
+    <button class="btn" data-step="120">+10年</button>
+    <span class="sep"></span>
+    <button id="new-world" class="btn ghost" title="別の銀河を生成する">新しい銀河</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="map-wrap">
+    <div class="map-toolbar">
+      <div class="seg" id="map-mode">
+        <button data-mode="owner" class="on">勢力</button>
+        <button data-mode="unrest">不穏度</button>
+        <button data-mode="war">戦火</button>
+      </div>
+      <div class="map-hint">ホイールで拡大・ドラッグで移動・星を押すと詳細</div>
+      <button id="map-reset" class="btn small ghost">全体を表示</button>
+    </div>
+    <svg id="map" role="img" aria-label="銀河の星図"></svg>
+    <div id="tooltip" class="tooltip" hidden></div>
+    <div id="banner" class="banner" hidden></div>
+    <div id="busy" class="busy" hidden><span class="spinner"></span><span id="busy-text">時が流れています……</span></div>
+  </section>
+
+  <aside class="panel">
+    <nav class="tabs" id="tabs">
+      <button data-tab="chronicle" class="on">年代記</button>
+      <button data-tab="factions">勢力</button>
+      <button data-tab="people">人物</button>
+      <button data-tab="wars">戦争</button>
+      <button data-tab="detail" id="detail-tab" hidden>詳細</button>
+    </nav>
+
+    <div class="tab-body" id="tab-chronicle">
+      <div class="filter-row">
+        <label>表示する出来事
+          <select id="min-imp" class="sel small">
+            <option value="5">✦ 歴史的大事件のみ</option>
+            <option value="4">★ 重大事件以上</option>
+            <option value="3" selected>◆ 主な出来事</option>
+            <option value="2">◇ 細かな出来事も</option>
+            <option value="1">・ すべて</option>
+          </select>
+        </label>
+        <button id="show-prologue" class="btn small ghost">序章を読む</button>
+      </div>
+      <div id="feed" class="feed"></div>
+    </div>
+
+    <div class="tab-body" id="tab-factions" hidden>
+      <div id="faction-list" class="list"></div>
+    </div>
+
+    <div class="tab-body" id="tab-people" hidden>
+      <div class="filter-row">
+        <input id="search" class="input" type="search" placeholder="名前で探す">
+        <label class="check"><input type="checkbox" id="include-dead"> 故人も含む</label>
+      </div>
+      <div id="people-list" class="list"></div>
+    </div>
+
+    <div class="tab-body" id="tab-wars" hidden>
+      <div id="war-list" class="list"></div>
+    </div>
+
+    <div class="tab-body" id="tab-detail" hidden>
+      <div class="detail-nav">
+        <button id="back" class="btn small ghost">← 戻る</button>
+      </div>
+      <div id="detail"></div>
+    </div>
+  </aside>
+</main>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-card">
+    <div id="modal-body"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
